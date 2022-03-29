@@ -1,0 +1,6 @@
+<apex:page >
+    <h1>
+        This is my secong VF page. <br />
+        I am suing Dev COnsole here.
+    </h1>
+</apex:page>

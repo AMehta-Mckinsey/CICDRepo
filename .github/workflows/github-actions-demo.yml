@@ -26,9 +26,9 @@ name: Deploy to Salesforce Pipeline
 # events but only for the master branch
 on:
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+    branches: [ main ]
+  #pull_request:
+   # branches: [ master ]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -68,7 +68,9 @@ jobs:
     # Run Validation of Deploy Source
     - name: Run Validation on Deploy Source
       run: sfdx force:mdapi:deploy -c -d ./toDeploy -u prod -w 10
+      #run: sfdx force:mdapi:deploy -l RunLocalTests -c -d ./toDeploy -u prod -w 10
     
     # Deploy
     - name : Deploy to SF Org
       run: sfdx force:mdapi:deploy -d ./toDeploy -u prod -w 10
+      #run: sfdx force:mdapi:deploy -l RunLocalTests -d ./toDeploy -u prod -w 10
