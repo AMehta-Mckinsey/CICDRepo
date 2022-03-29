@@ -1,0 +1,6 @@
+<aura:component >
+	<ltng:require styles="/resource/slds090/assets/styles/salesforce-lightning-design-system.min.css"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:handler event="c:getExpenseList" action="{!c.generateExpense}" />
+    {!v.body}
+</aura:component>

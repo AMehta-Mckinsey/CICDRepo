@@ -1,0 +1,19 @@
+<apex:page standardController="Account" recordSetVar="accounts" tabstyle="account" sidebar="false">
+   <apex:pageBlock title="Account" >
+       <apex:form >
+           
+           <apex:pageBlockTable value="{!accounts}" var="a" id="list">
+               
+               <apex:column value="{!a.type}" />
+               <apex:column value="{!a.billingstreet}"/>
+               <apex:column value="{!a.billingCity}" />
+               <apex:column value="{!a.billingCountry}" />
+               <apex:column value="{!a.billingPostalCode}"/>
+               <apex:column value="{!a.createdById}"/>
+           </apex:pageBlockTable>
+           
+       </apex:form>
+       
+   </apex:pageBlock>
+   
+</apex:page>

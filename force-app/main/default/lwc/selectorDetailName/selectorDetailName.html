@@ -1,0 +1,15 @@
+<template>
+        <div class="wrapper">
+        <section class="content">
+            <div class="columns">
+            <main class="main" >
+                <c-list onproductselected={handleProductSelected}></c-list>
+            </main>
+            <aside class="sidebar-second">
+                <header class="header">Available Bikes for {name}</header>
+                <c-detail product-id={selectedProductId}></c-detail>
+            </aside>
+            </div>
+        </section>
+        </div>
+    </template>
