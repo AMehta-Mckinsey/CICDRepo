@@ -1,23 +1,3 @@
-# name: GitHub Actions Demo
-# on: [push]
-# jobs:
-#   Explore-GitHub-Actions:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-#       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-#       - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-#       - name: Check out repository code
-#         uses: actions/checkout@v2
-#       - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-#       - run: echo "🖥️ The workflow is now ready to test your code on the runner."
-#       - name: List files in the repository
-#         run: |
-#           ls ${{ github.workspace }}
-#       - run: echo "🍏 This job's status is ${{ job.status }}."
-#       - run: echo "🍏 This branch is devTest."
-
-   
 # This is a basic workflow to help you get started with Actions
 
 name: Deploy to Salesforce Pipeline
@@ -62,15 +42,28 @@ jobs:
       run: sfdx force:auth:jwt:grant --clientid $CLIENT_ID --jwtkeyfile .buildfiles/server.key --username $USERNAME --instanceurl $INSTANCE_URL -a prod
 
     # Convert to Deploy Source
+    #- name: Convert to Deploy Source
+    #  run: sfdx force:source:convert -r ./force-app -d ./toDeploy
+    - name: Install App and Create Delta
+      run: |
+      sudo npm install sfdx-git-delat@latest -g
+      git config remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'
+      git fetch --all
+      git checkout -b pr
+      git --no-pager diff --name-status pr origin/master
+      sgd --to pr --from origin/master --repo . --output .
+      cat package/package.xml
+
+    # Convert to Deploy Source only the delta change
     - name: Convert to Deploy Source
-      run: sfdx force:source:convert -r ./force-app -d ./toDeploy
-    
+      run: sfdx force:source:convert --manifest=package/package.xml --outputdir=convert
+
     # Run Validation of Deploy Source
     - name: Run Validation on Deploy Source
-      run: sfdx force:mdapi:deploy -c -d ./toDeploy -u prod -w 10
+      run: sfdx force:mdapi:deploy -l NoTestRun -c -d ./toDeploy -u prod -w 10
       #run: sfdx force:mdapi:deploy -l RunLocalTests -c -d ./toDeploy -u prod -w 10
     
     # Deploy
     - name : Deploy to SF Org
-      run: sfdx force:mdapi:deploy -d ./toDeploy -u prod -w 10
+      run: sfdx force:mdapi:deploy -l NoTestRun -d ./toDeploy -u prod -w 10
       #run: sfdx force:mdapi:deploy -l RunLocalTests -d ./toDeploy -u prod -w 10
