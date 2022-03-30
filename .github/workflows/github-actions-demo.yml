@@ -43,18 +43,17 @@ jobs:
 
       - name: Install App and Create Delta
         run: |
-          sudo npm install npm@8.5.5 sfdx-git-delta@latest -g
-          git config remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'
-          git fetch --all
-          git checkout -b pr
-          git --no-pager diff --name-status pr origin/master
-          sgd --to pr --from origin/master --repo . --output .
-          cat package/package.xml
-
-      # sudo sfdx update
-      # sudo sfdx plugins:install sfdx-git-delta
-      # sudo sfdx sgd:source:delta --to devTest --from main --output "."
-      # sudo sfdx force:source:deploy -x package/package.xml --postdestructivechanges destructiveChanges/destructiveChanges.xml
+          sfdx update
+          sfdx plugins:install sfdx-git-delta
+          sfdx sgd:source:delta --to devTest --from main --repo . --output .
+          sfdx force:source:deploy -x package/package.xml --postdestructivechanges destructiveChanges/destructiveChanges.xml
+          npm install npm@8.5.5 sfdx-git-delta@latest -g
+      # git config remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'
+      # git fetch --all
+      # git checkout -b pr
+      # git --no-pager diff --name-status pr origin/master
+      # sgd --to pr --from origin/master --repo . --output .
+      # cat package/package.xml
 
       # Convert to Deploy Source only the delta change
       - name: Convert to Deploy Source
