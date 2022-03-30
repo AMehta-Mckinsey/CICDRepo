@@ -32,9 +32,5 @@
         <members>*</members>
         <name>StaticResource</name>
     </types>
-    <types>
-        <members>github-actions-demo.yml</members>
-        <name>Workflow</name>
-    </types>
     <version>54.0</version>
 </Package>
