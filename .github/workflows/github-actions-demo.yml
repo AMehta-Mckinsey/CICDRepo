@@ -6,9 +6,9 @@ name: Deploy to Salesforce Pipeline
 # events but only for the master branch
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   #pull_request:
-   # branches: [ master ]
+  # branches: [ master ]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -19,51 +19,48 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - uses: actions/checkout@v2
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
 
-    # Setup Node
-    - name: Setup Node
-      uses: actions/setup-node@v2
-      with:
-        node-version: '14'
-    
-    # Install SFDX CLI
-    - name: Install SFDX CLI
-      run: npm install sfdx-cli --global
+      # Setup Node
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14"
 
-    # Authorize SF Org
-    - name: Authorize SF Org
-      env:
-        SECRET_KEY: ${{ secrets.SALESFORCEPRODSECRETKEY }}
-        CLIENT_ID: ${{ secrets.SALESFORCEPRODCLIENTID }}
-        USERNAME: ${{ secrets.SALESFORCEPRODUSERNAME }}
-        INSTANCE_URL: ${{ secrets.SALESFORCEPRODINSTANCEURL }}
-      run: sfdx force:auth:jwt:grant --clientid $CLIENT_ID --jwtkeyfile .buildfiles/server.key --username $USERNAME --instanceurl $INSTANCE_URL -a prod
+      # Install SFDX CLI
+      - name: Install SFDX CLI
+        run: npm install sfdx-cli --global
 
-    # Convert to Deploy Source
-    #- name: Convert to Deploy Source
-    #  run: sfdx force:source:convert -r ./force-app -d ./toDeploy
-    - name: Install App and Create Delta
-      run: |
-      sfdx plugins:install sfdx-git-delta
-      git config remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'
-      git fetch --all
-      git checkout -b pr
-      git --no-pager diff --name-status pr origin/master
-      sgd --to pr --from origin/master --repo . --output .
-      cat package/package.xml
+      # Authorize SF Org
+      - name: Authorize SF Org
+        env:
+          SECRET_KEY: ${{ secrets.SALESFORCEPRODSECRETKEY }}
+          CLIENT_ID: ${{ secrets.SALESFORCEPRODCLIENTID }}
+          USERNAME: ${{ secrets.SALESFORCEPRODUSERNAME }}
+          INSTANCE_URL: ${{ secrets.SALESFORCEPRODINSTANCEURL }}
+        run: sfdx force:auth:jwt:grant --clientid $CLIENT_ID --jwtkeyfile .buildfiles/server.key --username $USERNAME --instanceurl $INSTANCE_URL -a prod
 
-    # Convert to Deploy Source only the delta change
-    - name: Convert to Deploy Source
-      run: sfdx force:source:convert --manifest=package/package.xml --outputdir=convert
+      - name: Install App and Create Delta
+        run: |
+          sudo sfdx plugins:install sfdx-git-delta
+          git config remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'
+          git fetch --all
+          git checkout -b pr
+          git --no-pager diff --name-status pr origin/master
+          sgd --to pr --from origin/master --repo . --output .
+          cat package/package.xml
 
-    # Run Validation of Deploy Source
-    - name: Run Validation on Deploy Source
-      run: sfdx force:mdapi:deploy -l NoTestRun -c -d ./toDeploy -u prod -w 10
-      #run: sfdx force:mdapi:deploy -l RunLocalTests -c -d ./toDeploy -u prod -w 10
-    
-    # Deploy
-    - name : Deploy to SF Org
-      run: sfdx force:mdapi:deploy -l NoTestRun -d ./toDeploy -u prod -w 10
-      #run: sfdx force:mdapi:deploy -l RunLocalTests -d ./toDeploy -u prod -w 10
+      # Convert to Deploy Source only the delta change
+      - name: Convert to Deploy Source
+        run: sfdx force:source:convert --manifest=package/package.xml --outputdir=convert
+
+      # Run Validation of Deploy Source
+      - name: Run Validation on Deploy Source
+        run: sfdx force:mdapi:deploy -l NoTestRun -c -d ./toDeploy -u prod -w 10
+        #run: sfdx force:mdapi:deploy -l RunLocalTests -c -d ./toDeploy -u prod -w 10
+
+      # Deploy
+      - name: Deploy to SF Org
+        run: sfdx force:mdapi:deploy -l NoTestRun -d ./toDeploy -u prod -w 10
+        #run: sfdx force:mdapi:deploy -l RunLocalTests -d ./toDeploy -u prod -w 10
