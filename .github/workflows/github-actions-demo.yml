@@ -45,8 +45,8 @@ jobs:
         env:
           USERNAME: ${{ secrets.SALESFORCEPRODUSERNAME }}
         run: |
-          echo y | sudo sfdx plugins:install sfdx-git-delta
-          sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output "."
+          echo y | sfdx plugins:install sfdx-git-delta
+          sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output . --generate-delta
           sfdx config:set defaultusername=$USERNAME
           cat package/package.xml
       # sfdx force:source:deploy -x package/package.xml --postdestructivechanges destructiveChanges/destructiveChanges.xml
