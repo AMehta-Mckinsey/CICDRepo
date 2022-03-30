@@ -46,6 +46,7 @@ jobs:
           USERNAME: ${{ secrets.SALESFORCEPRODUSERNAME }}
         run: |
           echo y | sfdx plugins:install sfdx-git-delta
+          git fetch origin "+refs/heads/*:refs/remotes/origin/*"
           sfdx sgd:source:delta --from main --repo . --output .
           sfdx sgd:source:delta --from "HEAD^" --output .
           sfdx config:set defaultusername=$USERNAME
