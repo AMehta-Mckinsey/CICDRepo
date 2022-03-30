@@ -43,6 +43,7 @@ jobs:
 
       - name: Install App and Create Delta
         run: |
+          sudo sfdx update
           sudo sfdx plugins:install sfdx-git-delta
           sudo sfdx sgd:source:delta --to devTest --from main --output "."
           sudo sfdx force:source:deploy -x package/package.xml --postdestructivechanges destructiveChanges/destructiveChanges.xml
