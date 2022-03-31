@@ -48,11 +48,13 @@ jobs:
           echo y | sfdx plugins:install sfdx-git-delta
           sfdx plugins
           git config remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'
-          git fetch --all
-          git checkout -b pr
-          git --no-pager diff --name-status pr origin/master
-          sfdx sgd:source:delta --to pr --from origin/master -d --repo . --output .
+          sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output .
           cat package/package.xml
+
+      # git fetch --all
+      # git checkout -b pr
+      # git --no-pager diff --name-status pr origin/master
+      # sfdx sgd:source:delta --to pr --from origin/master -d --repo . --output .
 
       # sfdx sgd:source:delta --to HEAD --from HEAD^ --output . --generate-delta
       # sfdx config:set defaultusername=$USERNAME
