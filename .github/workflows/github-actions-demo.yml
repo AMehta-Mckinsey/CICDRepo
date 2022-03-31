@@ -49,7 +49,6 @@ jobs:
           sfdx plugins
           git config remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'
           git fetch --all
-          git --no-pager diff --name-status devTest origin/master
           sfdx sgd:source:delta --to devTest --from origin/master -d --repo . --output .
           cat package/package.xml
 
