@@ -47,7 +47,7 @@ jobs:
         run: |
           echo y | sfdx plugins:install sfdx-git-delta
           sfdx plugins
-          sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output . --generate-delta
+          sfdx sgd:source:delta --to HEAD --from HEAD^ --output . --generate-delta
           sfdx config:set defaultusername=$USERNAME
           cat package/package.xml
 
