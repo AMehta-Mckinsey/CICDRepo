@@ -47,9 +47,16 @@ jobs:
         run: |
           echo y | sfdx plugins:install sfdx-git-delta
           sfdx plugins
-          sfdx sgd:source:delta --to HEAD --from HEAD^ --output . --generate-delta
-          sfdx config:set defaultusername=$USERNAME
+          git config remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'
+          git fetch --all
+          git checkout -b pr
+          git --no-pager diff --name-status pr origin/master
+          sfdx sgd:source:delta --to pr --from origin/master --repo . --output .
           cat package/package.xml
+
+      # sfdx sgd:source:delta --to HEAD --from HEAD^ --output . --generate-delta
+      # sfdx config:set defaultusername=$USERNAME
+      # cat package/package.xml
 
       # sfdx force:source:deploy -x package/package.xml --postdestructivechanges destructiveChanges/destructiveChanges.xml
       # npm install npm@8.5.5 sfdx-git-delta@latest -g
