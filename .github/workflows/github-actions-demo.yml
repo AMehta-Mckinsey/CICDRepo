@@ -49,7 +49,7 @@ jobs:
           sfdx plugins
           git config remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'
           git fetch --all
-          sfdx sgd:source:delta --to devTest --from origin/master -d --repo . --output .
+          sfdx sgd:source:delta --to HEAD --from HEAD^ -d --repo . --output .
           cat package/package.xml
 
       # sfdx sgd:source:delta --to HEAD --from HEAD^ --output . --generate-delta
