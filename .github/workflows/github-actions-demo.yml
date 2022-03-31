@@ -45,15 +45,12 @@ jobs:
         env:
           USERNAME: ${{ secrets.SALESFORCEPRODUSERNAME }}
         run: |
-          npm install sfdx-cli --global
-          echo y | node_modules/sfdx-cli/bin/run plugins:install sfdx-git-delta
-          node_modules/sfdx-cli/bin/run sgd:source:delta --to "HEAD" --from "HEAD^" --output .
-          echo "--- package.xml generated with added and modified metadata ---"
+          echo y | sfdx plugins:install sfdx-git-delta
+          sfdx plugins
+          sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output . --generate-delta
+          sfdx config:set defaultusername=$USERNAME
           cat package/package.xml
-      # echo y | sfdx plugins:install sfdx-git-delta
-      # sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output . --generate-delta
-      # sfdx config:set defaultusername=$USERNAME
-      # cat package/package.xml
+
       # sfdx force:source:deploy -x package/package.xml --postdestructivechanges destructiveChanges/destructiveChanges.xml
       # npm install npm@8.5.5 sfdx-git-delta@latest -g
       # git config remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'
