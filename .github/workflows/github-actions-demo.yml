@@ -5,10 +5,10 @@ name: Deploy to Salesforce Pipeline
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
 on:
-  push:
+  # push:
+  #   branches: [master]
+  pull_request:
     branches: [master]
-  #pull_request:
-  # branches: [ master ]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -45,11 +45,12 @@ jobs:
         env:
           USERNAME: ${{ secrets.SALESFORCEPRODUSERNAME }}
         run: |
-          echo step 1
-          echo y | sfdx plugins:install sfdx-git-delta
-          echo step 2
-          sfdx sgd:source:delta --to devTest --from origin/master --output . --generate-delta
-          echo step 3
+          echo 'y' | sfdx plugins:install sfdx-git-delta
+          git config remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'
+          git fetch --all
+          git checkout -b pr
+          git --no-pager diff --name-status pr origin/master
+          sfdx sgd:source:delta --to pr --from origin/master --repo . --output .
           cat package/package.xml
       # sfdx plugins --core
       # sfdx sgd:source:delta -h
