@@ -45,19 +45,16 @@ jobs:
         env:
           USERNAME: ${{ secrets.SALESFORCEPRODUSERNAME }}
         run: |
-          env
-          export HOME=/root
-          env
-          sfdx -v
-          node -v
-          npm -v
-          sfdx plugins --core
-          sfdx sgd:source:delta -h
           echo y | sfdx plugins:install sfdx-git-delta
-          sfdx sgd:source:delta -h
-          git config remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'
-          sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output .
+          sfdx sgd:source:delta --to "HEAD" --from "HEAD^"  --ignore ignorefile --output "."
           cat package/package.xml
+      # sfdx plugins --core
+      # sfdx sgd:source:delta -h
+      # echo y | sfdx plugins:install sfdx-git-delta
+      # sfdx sgd:source:delta -h
+      # git config remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'
+      # sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output .
+      # cat package/package.xml
 
       # git fetch --all
       # git checkout -b pr
