@@ -45,9 +45,11 @@ jobs:
         env:
           USERNAME: ${{ secrets.SALESFORCEPRODUSERNAME }}
         run: |
+          echo step 1
           echo y | sfdx plugins:install sfdx-git-delta
-          git checkout devTest
+          echo step 2
           sfdx sgd:source:delta --to devTest --from origin/master --output . --generate-delta
+          echo step 3
           cat package/package.xml
       # sfdx plugins --core
       # sfdx sgd:source:delta -h
