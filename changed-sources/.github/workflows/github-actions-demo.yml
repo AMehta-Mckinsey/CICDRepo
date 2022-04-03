@@ -46,8 +46,7 @@ jobs:
           USERNAME: ${{ secrets.SALESFORCEPRODUSERNAME }}
         run: |
           echo y | sfdx plugins:install sfdx-git-delta
-          git checkout devTest
-          sfdx sgd:source:delta --to devTest --from origin/master --output . --generate-delta
+          sfdx sgd:source:delta --to "HEAD" --from "HEAD^"  --ignore ignorefile --output "."
           cat package/package.xml
       # sfdx plugins --core
       # sfdx sgd:source:delta -h
