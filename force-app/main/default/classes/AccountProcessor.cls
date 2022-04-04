@@ -4,7 +4,7 @@ public class AccountProcessor {
     List<Account> accUpd = new List<Account>();
     List<Account> accountRec = new List<Account>();
     List<Contact> con = new List<Contact>();
-    System.debug('Checking for CICD----1');
+    System.debug('Checking for CICD----2');
     accountRec = [
       SELECT Id, Number_of_Contacts__c
       FROM Account
