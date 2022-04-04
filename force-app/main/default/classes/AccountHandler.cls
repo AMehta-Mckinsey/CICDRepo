@@ -1,6 +1,6 @@
 public class AccountHandler {
   public static Account insertNewAccount(String name) {
-    System.debug('Checking for CICD----1');
+    System.debug('Checking for CICD----2');
     Account a = new Account();
     a.Name = 'name';
 
