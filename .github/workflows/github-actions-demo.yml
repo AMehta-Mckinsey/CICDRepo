@@ -80,12 +80,13 @@ jobs:
 
       # Convert to Deploy Source only the delta change
       - name: Convert to Deploy Source
-        run: |
-          sfdx force:source:convert --manifest=package/package.xml --outputdir=convert
+        run: sfdx force:source:convert --manifest=package/package.xml --outputdir=convert
 
       # Run Validation of Deploy Source
       - name: Run Validation on Deploy Source
-        run: sfdx force:mdapi:deploy -l NoTestRun -x package/package.xml
+        run: |
+          sfdx force:mdapi:deploy -l NoTestRun -d convert -u prod
+          sfdx force:mdapi:deploy:report -u prod
         #run: sfdx force:mdapi:deploy -l NoTestRun -c -d=convert -u prod -w 10
         #run: sfdx force:mdapi:deploy -l RunLocalTests -c -d ./toDeploy -u prod -w 10
 
